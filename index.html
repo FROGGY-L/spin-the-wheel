@@ -573,6 +573,22 @@
             margin-bottom: 10px;
         }
 
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            font-weight: 900;
+            color: #6d28d9;
+            background: rgba(255, 255, 255, .94);
+            border: 4px solid white;
+            border-radius: 25px;
+            box-shadow: 0 12px 30px rgba(76, 29, 149, .15);
+        }
+
+        .footer .footer-heart {
+            color: #ec4899;
+        }
+
         @media(max-width:850px) {
             .management {
                 grid-template-columns: 1fr;
@@ -710,10 +726,14 @@
                     <button class="btn btn-clear" onclick="clearHistory()">🗑️ Clear Results</button>
                 </div>
             </div>
-            <div id="historyList" class="history-list">
+<div id="historyList" class="history-list">
                 <div class="empty">No group assignments yet. 🎈</div>
             </div>
         </section>
+
+        <footer class="footer">
+            🎡 © <span id="footerYear"></span> Created by <span class="footer-heart">❤️ FROGGY</span> 🐸
+        </footer>
     </div>
 
     <!-- MODALS -->
@@ -840,9 +860,13 @@
         // Track if person has been selected but not yet grouped
         let personSelectedWaitingForGroup = false;
 
-        document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
             renderAll();
             setMode("wheel");
+            const footerYear = document.getElementById("footerYear");
+            if (footerYear) {
+                footerYear.textContent = new Date().getFullYear();
+            }
         });
 
         function setMode(mode) {
