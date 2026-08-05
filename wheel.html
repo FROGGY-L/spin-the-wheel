@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 Spin & Group Fun!</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple: #7c3aed;
+            --pink: #ec4899;
+            --yellow: #facc15;
+            --green: #22c55e;
+            --blue: #3b82f6;
+            --orange: #f97316;
+            --dark: #312e81;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Trebuchet MS", "Comic Sans MS", Arial, sans-serif;
+            background:
+                radial-gradient(circle at 10% 15%, #fde68a 0 70px, transparent 71px),
+                radial-gradient(circle at 90% 10%, #f9a8d4 0 80px, transparent 81px),
+                radial-gradient(circle at 10% 90%, #93c5fd 0 90px, transparent 91px),
+                linear-gradient(135deg, #ede9fe, #fce7f3, #dbeafe);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "⭐ 🎈 🌈 ✨ 🎨 🦄 ⭐ 🎈 🌈 ✨";
+            position: fixed;
+            inset: 0;
+            font-size: 30px;
+            opacity: .12;
+            line-height: 100px;
+            letter-spacing: 30px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .app {
+            width: min(1450px, 96%);
+            margin: auto;
+            padding: 25px 0 50px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: clamp(34px, 5vw, 64px);
+            font-weight: 900;
+            color: var(--purple);
+            text-shadow: 3px 3px 0 #fff, 6px 6px 0 #f9a8d4;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #6d28d9;
+        }
+
+        .mode-card {
+            background: rgba(255, 255, 255, .94);
+            border: 4px solid white;
+            border-radius: 25px;
+            padding: 16px;
+            box-shadow: 0 12px 30px rgba(76, 29, 149, .15);
+            margin-bottom: 20px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            border: 0;
+            border-radius: 18px;
+            padding: 13px 25px;
+            font-size: 17px;
+            font-weight: 900;
+            cursor: pointer;
+            color: #4c1d95;
+            background: #ede9fe;
+            transition: .2s;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .mode-btn.active {
+            color: white;
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            box-shadow: 0 8px 18px rgba(124, 58, 237, .3);
+        }
+
+        .management {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .manage-card {
+            background: rgba(255, 255, 255, .94);
+            border: 4px solid white;
+            border-radius: 25px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(76, 29, 149, .12);
+        }
+
+        .manage-card h2 {
+            margin: 0 0 5px;
+            font-size: 23px;
+        }
+
+        .count {
+            font-weight: bold;
+            color: #7c3aed;
+            margin-bottom: 12px;
+        }
+
+        .manage-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 0;
+            padding: 11px 18px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-add {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-clear {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .btn-export {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #facc15;
+            color: #7c3aed;
+        }
+
+        .wheels {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            align-items: start;
+            justify-items: center;
+        }
+
+        .wheels.two-columns {
+            grid-template-columns: repeat(2, minmax(300px, 1fr));
+        }
+
+        .wheel-card {
+            background: rgba(255, 255, 255, .94);
+            border: 5px solid white;
+            border-radius: 35px;
+            padding: 20px;
+            box-shadow: 0 20px 45px rgba(76, 29, 149, .18);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .wheel-card.hidden {
+            display: none;
+        }
+
+        .wheel-title {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .wheel-subtitle {
+            margin: 5px 0 15px;
+            color: #7c3aed;
+            font-weight: bold;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: min(430px, 90vw);
+            aspect-ratio: 1;
+            margin: auto;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            filter: drop-shadow(0 12px 15px rgba(0, 0, 0, .2));
+            transition: transform 0.3s ease;
+        }
+
+        .pointer {
+            position: absolute;
+            z-index: 10;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 24px solid transparent;
+            border-right: 24px solid transparent;
+            border-top: 55px solid #ef4444;
+            filter: drop-shadow(0 4px 3px rgba(0, 0, 0, .25));
+        }
+
+        .wheel-center {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 7px solid #facc15;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, .2);
+            z-index: 5;
+        }
+
+        .spin-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .spin-btn,
+        .stop-btn {
+            border: 0;
+            border-radius: 20px;
+            padding: 16px 25px;
+            font-size: 21px;
+            font-weight: 900;
+            color: white;
+            cursor: pointer;
+            transition: .15s;
+        }
+
+        .spin-btn {
+            background: linear-gradient(135deg, #f97316, #ec4899);
+            box-shadow: 0 7px 0 #be185d;
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 7px 0 #7f1d1d;
+            display: none;
+        }
+
+        .spin-btn:hover,
+        .stop-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .spin-btn:active,
+        .stop-btn:active {
+            transform: translateY(4px);
+        }
+
+        .spin-btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        .stop-btn.show {
+            display: inline-block;
+        }
+
+        .result-card {
+            margin-top: 25px;
+            background: linear-gradient(135deg, #fff7ed, #fef3c7);
+            border: 5px solid white;
+            border-radius: 30px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(234, 88, 12, .15);
+        }
+
+        .result-label {
+            font-size: 17px;
+            font-weight: 900;
+            color: #ea580c;
+        }
+
+        .result-main {
+            font-size: clamp(30px, 5vw, 52px);
+            font-weight: 900;
+            margin: 7px 0;
+            color: #7c3aed;
+        }
+
+        .result-message {
+            font-size: 20px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+
+        .result-card.pop {
+            animation: resultPop .7s ease;
+        }
+
+        @keyframes resultPop {
+            0% {
+                transform: scale(.7);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.08);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .history-card {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, .94);
+            border: 4px solid white;
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(76, 29, 149, .13);
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .history-header h2 {
+            margin: 0;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .history-list {
+            margin-top: 15px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 16px;
+            border-radius: 15px;
+            background: #f5f3ff;
+            font-weight: bold;
+        }
+
+        .history-group {
+            color: #7c3aed;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #94a3b8;
+            font-weight: bold;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 27, 75, .65);
+            backdrop-filter: blur(7px);
+            z-index: 1000;
+            padding: 15px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: min(600px, 100%);
+            background: white;
+            border-radius: 30px;
+            padding: 28px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+            animation: modalIn .3s ease;
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(.75) translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-icon {
+            font-size: 75px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        .modal-box h2 {
+            margin: 8px 0;
+            font-size: 34px;
+            color: #7c3aed;
+        }
+
+        .modal-result {
+            font-size: 38px;
+            font-weight: 900;
+            color: #ec4899;
+            margin: 10px 0;
+        }
+
+        .modal-message {
+            font-size: 21px;
+            font-weight: bold;
+            color: #16a34a;
+        }
+
+        textarea {
+            width: 100%;
+            border: 3px solid #ddd6fe;
+            border-radius: 15px;
+            padding: 14px;
+            font: inherit;
+            outline: none;
+            margin-bottom: 12px;
+            min-height: 250px;
+            resize: vertical;
+            text-align: left;
+            font-family: "Trebuchet MS", "Comic Sans MS", Arial, sans-serif;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        textarea:focus {
+            border-color: #8b5cf6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-save {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-close {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .congrats-close {
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            color: white;
+            padding: 14px 35px;
+            font-size: 18px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #312e81;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 18px;
+            font-weight: 900;
+            z-index: 2000;
+            transition: .3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .confetti {
+            position: fixed;
+            top: -30px;
+            z-index: 3000;
+            pointer-events: none;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .modal-instructions {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        @media(max-width:850px) {
+            .management {
+                grid-template-columns: 1fr;
+            }
+
+            .wheels.two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:500px) {
+            .app {
+                width: 94%;
+            }
+
+            .header h1 {
+                font-size: 38px;
+            }
+
+            .wheel-container {
+                width: 88vw;
+            }
+
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>🎡 Spin & Group Fun! 🎉</h1>
+            <p>Spin the wheel and let the fun decide! 🌈</p>
+        </header>
+        <section class="mode-card">
+            <div class="mode-buttons">
+                <button class="mode-btn active" id="wheelModeBtn" onclick="setMode('wheel')">
+                    🎡 Wheel
+                </button>
+                <button class="mode-btn" id="groupModeBtn" onclick="setMode('group')">
+                    👥 Make Groups
+                </button>
+            </div>
+        </section>
+
+        <!-- WHEEL MODE MANAGEMENT -->
+        <section class="management" id="wheelManagement">
+            <div class="manage-card">
+                <h2>👧👦 Wheel Names</h2>
+                <div class="count"><span id="wheelNameCount">0</span> names remaining</div>
+                <div class="manage-actions">
+                    <button class="btn btn-add" onclick="openWheelNameModal()">➕ Add Names</button>
+                    <button class="btn btn-edit" onclick="openWheelEditModal()">✏️ Edit Names</button>
+                    <button class="btn btn-clear" onclick="clearWheelNames()">🗑️ Clear</button>
+                </div>
+            </div>
+            <div class="manage-card" style="background: #f5f3ff;">
+                <h2>🎯 Wheel Mode</h2>
+                <div class="count">Just spin to pick a random name!</div>
+                <div class="manage-actions">
+                    <button class="btn" style="background: #ede9fe; color: #7c3aed;"
+                        onclick="showToast('🎡 Spin the wheel to select a random name!')">ℹ️ How to use</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- GROUP MODE MANAGEMENT -->
+        <section class="management" id="groupManagement" style="display: none;">
+            <div class="manage-card">
+                <h2>👧👦 People to Group</h2>
+                <div class="count"><span id="groupNameCount">0</span> people remaining</div>
+                <div class="manage-actions">
+                    <button class="btn btn-add" onclick="openGroupNameModal()">➕ Add People</button>
+                    <button class="btn btn-edit" onclick="openGroupEditModal()">✏️ Edit People</button>
+                    <button class="btn btn-clear" onclick="clearGroupNames()">🗑️ Clear</button>
+                </div>
+            </div>
+            <div class="manage-card">
+                <h2>👥 Group Names</h2>
+                <div class="count"><span id="groupListCount">0</span> groups</div>
+                <div class="manage-actions">
+                    <button class="btn btn-add" onclick="openGroupListModal()">➕ Add Groups</button>
+                    <button class="btn btn-edit" onclick="openGroupEditModal()">✏️ Edit Groups</button>
+                    <button class="btn btn-clear" onclick="clearGroupLists()">🗑️ Clear</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="wheels" id="wheelsContainer">
+            <!-- NAME WHEEL (Always visible) -->
+            <div class="wheel-card" id="nameWheelCard">
+                <h2 class="wheel-title">🎡 Name Wheel</h2>
+                <p class="wheel-subtitle">Spin to pick a random name!</p>
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <canvas id="nameCanvas" width="700" height="700"></canvas>
+                    <div class="wheel-center">🎡</div>
+                </div>
+                <div class="spin-controls">
+                    <button class="spin-btn" id="nameSpinBtn" onclick="handleNameSpin()">🎡 SPIN!</button>
+                    <button class="stop-btn" id="nameStopBtn" onclick="stopNameSpin()">🛑 STOP</button>
+                </div>
+            </div>
+
+            <!-- GROUP WHEEL (Only visible in Group Mode) -->
+            <div class="wheel-card hidden" id="groupWheelCard">
+                <h2 class="wheel-title">👥 Group Wheel</h2>
+                <p class="wheel-subtitle">Assign the selected person to a group!</p>
+                <div class="wheel-container">
+                    <div class="pointer"></div>
+                    <canvas id="groupCanvas" width="700" height="700"></canvas>
+                    <div class="wheel-center">👥</div>
+                </div>
+                <div class="spin-controls">
+                    <button class="spin-btn" id="groupSpinBtn" onclick="startGroupSpin()" disabled>👥 SPIN!</button>
+                    <button class="stop-btn" id="groupStopBtn" onclick="stopGroupSpin()">🛑 STOP</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="result-card" id="resultCard">
+            <div class="result-label">🌟 RESULT 🌟</div>
+            <div class="result-main" id="resultMain">Ready to Spin!</div>
+            <div class="result-message" id="resultMessage">😊 Add some names to begin!</div>
+        </section>
+
+        <section class="history-card">
+            <div class="history-header">
+                <h2>📋 Grouping Results</h2>
+                <div class="history-actions">
+                    <button class="btn btn-export" onclick="exportResults()">📤 Export CSV</button>
+                    <button class="btn btn-clear" onclick="clearHistory()">🗑️ Clear Results</button>
+                </div>
+            </div>
+            <div id="historyList" class="history-list">
+                <div class="empty">No group assignments yet. 🎈</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal" id="wheelNameModal">
+        <div class="modal-box">
+            <h2>🎡 Add Wheel Names</h2>
+            <p>Add one name per line.</p>
+            <div class="modal-instructions">💡 Type new names below (one per line)</div>
+            <textarea id="wheelNameInput" placeholder="Ace&#10;John&#10;Maria&#10;Sarah&#10;Michael"></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-close" onclick="closeModals()">Cancel</button>
+                <button class="btn btn-save" onclick="saveWheelNames()">💾 Add Names</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="wheelEditModal">
+        <div class="modal-box">
+            <h2>✏️ Edit Wheel Names</h2>
+            <p>Edit, add, or remove names. One name per line.</p>
+            <div class="modal-instructions">📝 Edit the list below - add new lines or delete existing ones</div>
+            <textarea id="wheelEditInput" placeholder="Ace&#10;John&#10;Maria&#10;Sarah&#10;Michael"></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-close" onclick="closeModals()">Cancel</button>
+                <button class="btn btn-save" onclick="saveWheelEdit()">💾 Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="groupNameModal">
+        <div class="modal-box">
+            <h2>👧👦 Add People to Group</h2>
+            <p>Add one person per line.</p>
+            <div class="modal-instructions">💡 Type new people below (one per line)</div>
+            <textarea id="groupNameInput" placeholder="Alice&#10;Bob&#10;Charlie&#10;Diana"></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-close" onclick="closeModals()">Cancel</button>
+                <button class="btn btn-save" onclick="saveGroupNames()">💾 Add People</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="groupEditModal">
+        <div class="modal-box">
+            <h2>✏️ Edit People to Group</h2>
+            <p>Edit, add, or remove people. One person per line.</p>
+            <div class="modal-instructions">📝 Edit the list below - add new lines or delete existing ones</div>
+            <textarea id="groupEditInput" placeholder="Alice&#10;Bob&#10;Charlie&#10;Diana"></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-close" onclick="closeModals()">Cancel</button>
+                <button class="btn btn-save" onclick="saveGroupEdit()">💾 Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="groupListModal">
+        <div class="modal-box">
+            <h2>👥 Add Groups</h2>
+            <p>Add one group name per line.</p>
+            <div class="modal-instructions">💡 Type new groups below (one per line)</div>
+            <textarea id="groupListInput" placeholder="Team A&#10;Team B&#10;Team C"></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-close" onclick="closeModals()">Cancel</button>
+                <button class="btn btn-save" onclick="saveGroupLists()">💾 Add Groups</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="groupListEditModal">
+        <div class="modal-box">
+            <h2>✏️ Edit Groups</h2>
+            <p>Edit, add, or remove groups. One group per line.</p>
+            <div class="modal-instructions">📝 Edit the list below - add new lines or delete existing ones</div>
+            <textarea id="groupListEditInput" placeholder="Team A&#10;Team B&#10;Team C"></textarea>
+            <div class="modal-buttons">
+                <button class="btn btn-close" onclick="closeModals()">Cancel</button>
+                <button class="btn btn-save" onclick="saveGroupListEdit()">💾 Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="congratsModal">
+        <div class="modal-box">
+            <div class="modal-icon">🎉</div>
+            <h2>Congratulations!</h2>
+            <div class="modal-result" id="congratsResult">Group 1 — Ace</div>
+            <div class="modal-message">🎉 Person assigned to group!<br>😊 Awesome!</div>
+            <br>
+            <button class="btn congrats-close" onclick="closeCongrats()">🎊 Awesome!</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <audio id="spinSound" src="mingle-sound.mp3" preload="auto"></audio>
+
+    <script>
+        const COLORS = [
+            "#FF6B6B", "#FFD93D", "#6BCB77", "#4D96FF",
+            "#C77DFF", "#FF922B", "#20C997", "#F06595",
+            "#74C0FC", "#A9E34B", "#845EF7", "#FF8787"
+        ];
+
+        // ===== SEPARATE DATA STORES =====
+        let wheelNames = JSON.parse(localStorage.getItem("wheelNames") || "[]");
+        let groupPeople = JSON.parse(localStorage.getItem("groupPeople") || "[]");
+        let groupLists = JSON.parse(localStorage.getItem("groupLists") || "[]");
+        let groupResults = JSON.parse(localStorage.getItem("groupResults") || "[]");
+
+        let currentMode = "wheel";
+
+        // Wheel state
+        let selectedWheelName = null;
+        let selectedWheelIndex = null;
+        let nameRotation = 0;
+        let nameSpinning = false;
+
+        // Group state
+        let selectedPerson = null;
+        let selectedPersonIndex = null;
+        let selectedGroupIndex = null;
+        let groupRotation = 0;
+        let groupSpinning = false;
+
+        // Track if person has been selected but not yet grouped
+        let personSelectedWaitingForGroup = false;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            renderAll();
+            setMode("wheel");
+        });
+
+        function setMode(mode) {
+            if (nameSpinning || groupSpinning) {
+                showToast("🛑 Please stop the wheel first.");
+                return;
+            }
+
+            currentMode = mode;
+
+            const wheelBtn = document.getElementById("wheelModeBtn");
+            const groupBtn = document.getElementById("groupModeBtn");
+            const wheelManagement = document.getElementById("wheelManagement");
+            const groupManagement = document.getElementById("groupManagement");
+            const groupWheel = document.getElementById("groupWheelCard");
+            const wheelsContainer = document.getElementById("wheelsContainer");
+
+            if (mode === "wheel") {
+                wheelBtn.classList.add("active");
+                groupBtn.classList.remove("active");
+
+                wheelManagement.style.display = "grid";
+                groupManagement.style.display = "none";
+                groupWheel.classList.add("hidden");
+                wheelsContainer.classList.remove("two-columns");
+
+                selectedPerson = null;
+                selectedPersonIndex = null;
+                selectedGroupIndex = null;
+                personSelectedWaitingForGroup = false;
+
+                document.getElementById("groupSpinBtn").disabled = true;
+
+                // Reset name wheel button
+                document.getElementById("nameSpinBtn").textContent = "🎡 SPIN!";
+                document.getElementById("nameSpinBtn").disabled = wheelNames.length === 0;
+                document.getElementById("nameStopBtn").classList.remove("show");
+
+                updateResult(
+                    wheelNames.length ? "Ready to Spin!" : "No Names",
+                    wheelNames.length
+                        ? "🎡 Click SPIN then STOP to select a name!"
+                        : "😊 Add some names to the wheel!"
+                );
+            } else {
+                groupBtn.classList.add("active");
+                wheelBtn.classList.remove("active");
+
+                wheelManagement.style.display = "none";
+                groupManagement.style.display = "grid";
+                groupWheel.classList.remove("hidden");
+                wheelsContainer.classList.add("two-columns");
+
+                selectedWheelName = null;
+                selectedWheelIndex = null;
+
+                // Reset name wheel button for group mode
+                document.getElementById("nameSpinBtn").textContent = "👤 SPIN!";
+                document.getElementById("nameSpinBtn").disabled = groupPeople.length === 0 || personSelectedWaitingForGroup;
+                document.getElementById("nameStopBtn").classList.remove("show");
+                document.getElementById("groupSpinBtn").disabled = true;
+                document.getElementById("groupStopBtn").classList.remove("show");
+
+                if (!groupPeople.length) {
+                    updateResult("No People", "👧👦 Add people to group first!");
+                } else if (!groupLists.length) {
+                    updateResult("No Groups", "👥 Add group names first!");
+                } else if (personSelectedWaitingForGroup) {
+                    updateResult("👤 " + selectedPerson, "🎉 Person selected! Now click SPIN on Group Wheel!");
+                } else {
+                    updateResult("Ready to Group!", "👤 Click SPIN then STOP to select a person!");
+                }
+            }
+
+            renderAll();
+        }
+
+        function playSpinSound() {
+            const sound = document.getElementById("spinSound");
+            if (!sound) return;
+            sound.pause();
+            sound.currentTime = 0;
+            sound.loop = true;
+            sound.play().catch(() => { });
+        }
+
+        function stopSpinSound() {
+            const sound = document.getElementById("spinSound");
+            if (!sound) return;
+            sound.pause();
+            sound.currentTime = 0;
+            sound.loop = false;
+        }
+
+        // ===== MODAL FUNCTIONS =====
+        function openWheelNameModal() {
+            document.getElementById("wheelNameModal").classList.add("show");
+            document.getElementById("wheelNameInput").value = "";
+            document.getElementById("wheelNameInput").focus();
+        }
+
+        function openWheelEditModal() {
+            document.getElementById("wheelEditModal").classList.add("show");
+            document.getElementById("wheelEditInput").value = wheelNames.join('\n');
+            document.getElementById("wheelEditInput").focus();
+        }
+
+        function openGroupNameModal() {
+            document.getElementById("groupNameModal").classList.add("show");
+            document.getElementById("groupNameInput").value = "";
+            document.getElementById("groupNameInput").focus();
+        }
+
+        function openGroupEditModal() {
+            document.getElementById("groupEditModal").classList.add("show");
+            document.getElementById("groupEditInput").value = groupPeople.join('\n');
+            document.getElementById("groupEditInput").focus();
+        }
+
+        function openGroupListModal() {
+            document.getElementById("groupListModal").classList.add("show");
+            document.getElementById("groupListInput").value = "";
+            document.getElementById("groupListInput").focus();
+        }
+
+        function openGroupListEditModal() {
+            document.getElementById("groupListEditModal").classList.add("show");
+            document.getElementById("groupListEditInput").value = groupLists.join('\n');
+            document.getElementById("groupListEditInput").focus();
+        }
+
+        function closeModals() {
+            document.querySelectorAll(".modal").forEach(function (modal) {
+                modal.classList.remove("show");
+            });
+        }
+
+        function closeCongrats() {
+            document.getElementById("congratsModal").classList.remove("show");
+        }
+
+        // ===== WHEEL MODE: Save Names =====
+        function saveWheelNames() {
+            const input = document.getElementById("wheelNameInput").value.trim();
+            if (!input) {
+                showToast("⚠️ Please enter at least one name.");
+                return;
+            }
+
+            const newNames = input.split(/\n/).map(n => n.trim()).filter(Boolean);
+            const oldLength = wheelNames.length;
+            wheelNames = [...new Set([...wheelNames, ...newNames])];
+            localStorage.setItem("wheelNames", JSON.stringify(wheelNames));
+
+            document.getElementById("wheelNameInput").value = "";
+            closeModals();
+            renderAll();
+            showToast("🎉 Added " + (wheelNames.length - oldLength) + " name(s) to wheel!");
+            document.getElementById("nameSpinBtn").disabled = wheelNames.length === 0;
+        }
+
+        function saveWheelEdit() {
+            const input = document.getElementById("wheelEditInput").value.trim();
+            if (!input) {
+                if (confirm("Remove all names?")) {
+                    wheelNames = [];
+                    localStorage.setItem("wheelNames", JSON.stringify(wheelNames));
+                    closeModals();
+                    renderAll();
+                    showToast("🗑️ All names removed!");
+                }
+                return;
+            }
+
+            const newNames = input.split(/\n/).map(n => n.trim()).filter(Boolean);
+            wheelNames = [...new Set(newNames)];
+            localStorage.setItem("wheelNames", JSON.stringify(wheelNames));
+
+            closeModals();
+            renderAll();
+            showToast("✅ Names updated successfully!");
+            document.getElementById("nameSpinBtn").disabled = wheelNames.length === 0;
+        }
+
+        function clearWheelNames() {
+            if (!wheelNames.length) return;
+            if (confirm("Remove all names from the wheel?")) {
+                wheelNames = [];
+                selectedWheelName = null;
+                selectedWheelIndex = null;
+                localStorage.removeItem("wheelNames");
+                renderAll();
+                showToast("🗑️ Wheel names cleared!");
+            }
+        }
+
+        // ===== GROUP MODE: Save People =====
+        function saveGroupNames() {
+            const input = document.getElementById("groupNameInput").value.trim();
+            if (!input) {
+                showToast("⚠️ Please enter at least one person.");
+                return;
+            }
+
+            const newPeople = input.split(/\n/).map(n => n.trim()).filter(Boolean);
+            const oldLength = groupPeople.length;
+            groupPeople = [...new Set([...groupPeople, ...newPeople])];
+            localStorage.setItem("groupPeople", JSON.stringify(groupPeople));
+
+            document.getElementById("groupNameInput").value = "";
+            closeModals();
+            renderAll();
+            showToast("🎉 Added " + (groupPeople.length - oldLength) + " person(s)!");
+            if (!personSelectedWaitingForGroup) {
+                document.getElementById("nameSpinBtn").disabled = groupPeople.length === 0;
+            }
+        }
+
+        function saveGroupEdit() {
+            const input = document.getElementById("groupEditInput").value.trim();
+            if (!input) {
+                if (confirm("Remove all people?")) {
+                    groupPeople = [];
+                    localStorage.setItem("groupPeople", JSON.stringify(groupPeople));
+                    closeModals();
+                    renderAll();
+                    showToast("🗑️ All people removed!");
+                }
+                return;
+            }
+
+            const newPeople = input.split(/\n/).map(n => n.trim()).filter(Boolean);
+            groupPeople = [...new Set(newPeople)];
+            localStorage.setItem("groupPeople", JSON.stringify(groupPeople));
+
+            closeModals();
+            renderAll();
+            showToast("✅ People updated successfully!");
+            if (!personSelectedWaitingForGroup) {
+                document.getElementById("nameSpinBtn").disabled = groupPeople.length === 0;
+            }
+        }
+
+        function clearGroupNames() {
+            if (!groupPeople.length) return;
+            if (confirm("Remove all people from grouping?")) {
+                groupPeople = [];
+                selectedPerson = null;
+                selectedPersonIndex = null;
+                personSelectedWaitingForGroup = false;
+                localStorage.removeItem("groupPeople");
+                renderAll();
+                document.getElementById("nameSpinBtn").disabled = true;
+                document.getElementById("groupSpinBtn").disabled = true;
+                showToast("🗑️ People cleared!");
+            }
+        }
+
+        // ===== GROUP MODE: Save Group Lists =====
+        function saveGroupLists() {
+            const input = document.getElementById("groupListInput").value.trim();
+            if (!input) {
+                showToast("⚠️ Please enter at least one group.");
+                return;
+            }
+
+            const newGroups = input.split(/\n/).map(g => g.trim()).filter(Boolean);
+            const oldLength = groupLists.length;
+            groupLists = [...new Set([...groupLists, ...newGroups])];
+            localStorage.setItem("groupLists", JSON.stringify(groupLists));
+
+            document.getElementById("groupListInput").value = "";
+            closeModals();
+            renderAll();
+            showToast("🎉 Added " + (groupLists.length - oldLength) + " group(s)!");
+        }
+
+        function saveGroupListEdit() {
+            const input = document.getElementById("groupListEditInput").value.trim();
+            if (!input) {
+                if (confirm("Remove all groups?")) {
+                    groupLists = [];
+                    localStorage.setItem("groupLists", JSON.stringify(groupLists));
+                    closeModals();
+                    renderAll();
+                    showToast("🗑️ All groups removed!");
+                }
+                return;
+            }
+
+            const newGroups = input.split(/\n/).map(g => g.trim()).filter(Boolean);
+            groupLists = [...new Set(newGroups)];
+            localStorage.setItem("groupLists", JSON.stringify(groupLists));
+
+            closeModals();
+            renderAll();
+            showToast("✅ Groups updated successfully!");
+        }
+
+        function clearGroupLists() {
+            if (!groupLists.length) return;
+            if (confirm("Remove all groups?")) {
+                groupLists = [];
+                selectedGroupIndex = null;
+                localStorage.removeItem("groupLists");
+                renderAll();
+                document.getElementById("groupSpinBtn").disabled = true;
+                showToast("🗑️ Groups cleared!");
+            }
+        }
+
+        function clearHistory() {
+            if (!groupResults.length) return;
+            if (confirm("Clear all grouping results?")) {
+                groupResults = [];
+                localStorage.removeItem("groupResults");
+                renderHistory();
+                showToast("🗑️ Results cleared!");
+            }
+        }
+
+        // ===== RENDER FUNCTIONS =====
+        function renderAll() {
+            document.getElementById("wheelNameCount").textContent = wheelNames.length;
+            document.getElementById("groupNameCount").textContent = groupPeople.length;
+            document.getElementById("groupListCount").textContent = groupLists.length;
+
+            drawWheel(document.getElementById("nameCanvas"),
+                currentMode === "wheel" ? wheelNames : groupPeople,
+                "wheel"
+            );
+            drawWheel(document.getElementById("groupCanvas"), groupLists, "group");
+            renderHistory();
+        }
+
+        function drawWheel(canvas, items, type) {
+            const ctx = canvas.getContext("2d");
+            const size = canvas.width;
+            const center = size / 2;
+            const radius = size / 2 - 10;
+
+            ctx.clearRect(0, 0, size, size);
+
+            if (!items.length) {
+                ctx.beginPath();
+                ctx.arc(center, center, radius, 0, Math.PI * 2);
+                ctx.fillStyle = "#ede9fe";
+                ctx.fill();
+
+                ctx.fillStyle = "#7c3aed";
+                ctx.font = "bold 30px Trebuchet MS";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                const label = type === "wheel" ? "Add Names 🎡" : "Add Groups 👥";
+                ctx.fillText(label, center, center);
+                return;
+            }
+
+            const slice = Math.PI * 2 / items.length;
+
+            items.forEach(function (item, index) {
+                const start = index * slice - Math.PI / 2;
+                const end = start + slice;
+
+                ctx.beginPath();
+                ctx.moveTo(center, center);
+                ctx.arc(center, center, radius, start, end);
+                ctx.closePath();
+
+                ctx.fillStyle = COLORS[index % COLORS.length];
+                ctx.fill();
+
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = "#ffffff";
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(center, center);
+                ctx.rotate(start + slice / 2);
+
+                ctx.textAlign = "right";
+                ctx.textBaseline = "middle";
+
+                let fontSize = 30;
+                if (items.length > 25) fontSize = 15;
+                else if (items.length > 15) fontSize = 20;
+
+                ctx.font = "900 " + fontSize + "px Trebuchet MS";
+                ctx.fillStyle = "#ffffff";
+                ctx.shadowColor = "rgba(0,0,0,.35)";
+                ctx.shadowBlur = 3;
+
+                const text = item.length > 18 ? item.substring(0, 17) + "…" : item;
+                ctx.fillText(text, radius - 25, 0);
+                ctx.restore();
+            });
+
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, Math.PI * 2);
+            ctx.lineWidth = 12;
+            ctx.strokeStyle = "#ffffff";
+            ctx.stroke();
+        }
+
+        // ===== HANDLE NAME SPIN (works for both modes) =====
+        function handleNameSpin() {
+            if (currentMode === "wheel") {
+                startWheelNameSpin();
+            } else {
+                startPersonSpin();
+            }
+        }
+
+        // ===== WHEEL MODE: Spin Name =====
+        function startWheelNameSpin() {
+            if (nameSpinning) return;
+            if (!wheelNames.length) {
+                showToast("🎡 Please add some names to the wheel first!");
+                return;
+            }
+
+            nameSpinning = true;
+            const spinBtn = document.getElementById("nameSpinBtn");
+            const stopBtn = document.getElementById("nameStopBtn");
+
+            spinBtn.textContent = "🔄 SPINNING...";
+            spinBtn.disabled = true;
+            stopBtn.classList.add("show");
+            playSpinSound();
+
+            function spinWheel() {
+                if (!nameSpinning) return;
+                nameRotation += 2;
+                const canvas = document.getElementById("nameCanvas");
+                canvas.style.transition = "none";
+                canvas.style.transform = "rotate(" + nameRotation + "deg)";
+                requestAnimationFrame(spinWheel);
+            }
+
+            spinWheel();
+        }
+
+        function stopNameSpin() {
+            if (!nameSpinning) return;
+
+            nameSpinning = false;
+            stopSpinSound();
+
+            const spinBtn = document.getElementById("nameSpinBtn");
+            const stopBtn = document.getElementById("nameStopBtn");
+
+            const items = currentMode === "wheel" ? wheelNames : groupPeople;
+
+            const canvas = document.getElementById("nameCanvas");
+            const style = window.getComputedStyle(canvas);
+            const matrix = new DOMMatrix(style.transform);
+            let currentAngle = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
+            if (currentAngle < 0) currentAngle += 360;
+
+            const segmentAngle = 360 / items.length;
+            let index = Math.floor(currentAngle / segmentAngle);
+            if (index >= items.length) index = items.length - 1;
+
+            if (currentMode === "wheel") {
+                selectedWheelIndex = index;
+                finishWheelNameSpin();
+            } else {
+                selectedPersonIndex = index;
+                finishPersonSpin();
+            }
+        }
+
+        function finishWheelNameSpin() {
+            const spinBtn = document.getElementById("nameSpinBtn");
+            const stopBtn = document.getElementById("nameStopBtn");
+
+            spinBtn.textContent = "🎡 SPIN!";
+            spinBtn.disabled = wheelNames.length === 0;
+            stopBtn.classList.remove("show");
+
+            if (selectedWheelIndex === null || selectedWheelIndex >= wheelNames.length) {
+                spinBtn.disabled = wheelNames.length === 0;
+                return;
+            }
+
+            const selected = wheelNames[selectedWheelIndex];
+            if (!selected) {
+                spinBtn.disabled = wheelNames.length === 0;
+                return;
+            }
+
+            selectedWheelName = selected;
+            wheelNames.splice(selectedWheelIndex, 1);
+            localStorage.setItem("wheelNames", JSON.stringify(wheelNames));
+
+            renderAll();
+            spinBtn.disabled = wheelNames.length === 0;
+
+            updateResult("🎯 " + selected, "🎉 Name selected! Click SPIN again!");
+            showCongratulations("🎯 " + selected);
+            celebrate();
+
+            selectedWheelName = null;
+            selectedWheelIndex = null;
+        }
+
+        // ===== GROUP MODE: Spin Person =====
+        function startPersonSpin() {
+            if (nameSpinning) return;
+            if (!groupPeople.length) {
+                showToast("👧👦 Please add people to group first!");
+                return;
+            }
+            if (!groupLists.length) {
+                showToast("👥 Please add groups first!");
+                return;
+            }
+            if (personSelectedWaitingForGroup) {
+                showToast("👤 Please assign the current person to a group first!");
+                return;
+            }
+
+            nameSpinning = true;
+            const spinBtn = document.getElementById("nameSpinBtn");
+            const stopBtn = document.getElementById("nameStopBtn");
+
+            spinBtn.textContent = "🔄 SPINNING...";
+            spinBtn.disabled = true;
+            stopBtn.classList.add("show");
+            playSpinSound();
+
+            function spinWheel() {
+                if (!nameSpinning) return;
+                nameRotation += 2;
+                const canvas = document.getElementById("nameCanvas");
+                canvas.style.transition = "none";
+                canvas.style.transform = "rotate(" + nameRotation + "deg)";
+                requestAnimationFrame(spinWheel);
+            }
+
+            spinWheel();
+        }
+
+        function finishPersonSpin() {
+            const spinBtn = document.getElementById("nameSpinBtn");
+            const stopBtn = document.getElementById("nameStopBtn");
+
+            spinBtn.textContent = "👤 SPIN!";
+            stopBtn.classList.remove("show");
+
+            if (selectedPersonIndex === null || selectedPersonIndex >= groupPeople.length) {
+                spinBtn.disabled = groupPeople.length === 0;
+                return;
+            }
+
+            const selected = groupPeople[selectedPersonIndex];
+            if (!selected) {
+                spinBtn.disabled = groupPeople.length === 0;
+                return;
+            }
+
+            selectedPerson = selected;
+            groupPeople.splice(selectedPersonIndex, 1);
+            localStorage.setItem("groupPeople", JSON.stringify(groupPeople));
+
+            personSelectedWaitingForGroup = true;
+            spinBtn.disabled = true; // Disable until group is assigned
+
+            renderAll();
+
+            document.getElementById("groupSpinBtn").disabled = false;
+            updateResult("👤 " + selected, "🎉 Person selected! Now click SPIN on Group Wheel!");
+            celebrateSmall();
+        }
+
+        // ===== GROUP MODE: Spin Group =====
+        function startGroupSpin() {
+            if (groupSpinning) return;
+            if (!selectedPerson) {
+                showToast("👤 Select a person first!");
+                return;
+            }
+            if (!groupLists.length) {
+                showToast("👥 Please add some groups first!");
+                return;
+            }
+
+            groupSpinning = true;
+            const spinBtn = document.getElementById("groupSpinBtn");
+            const stopBtn = document.getElementById("groupStopBtn");
+
+            spinBtn.textContent = "🔄 SPINNING...";
+            spinBtn.disabled = true;
+            stopBtn.classList.add("show");
+            playSpinSound();
+
+            function spinGroupWheel() {
+                if (!groupSpinning) return;
+                groupRotation += 2;
+                const canvas = document.getElementById("groupCanvas");
+                canvas.style.transition = "none";
+                canvas.style.transform = "rotate(" + groupRotation + "deg)";
+                requestAnimationFrame(spinGroupWheel);
+            }
+
+            spinGroupWheel();
+        }
+
+        function stopGroupSpin() {
+            if (!groupSpinning) return;
+
+            groupSpinning = false;
+            stopSpinSound();
+
+            const spinBtn = document.getElementById("groupSpinBtn");
+            const stopBtn = document.getElementById("groupStopBtn");
+
+            const canvas = document.getElementById("groupCanvas");
+            const style = window.getComputedStyle(canvas);
+            const matrix = new DOMMatrix(style.transform);
+            let currentAngle = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
+            if (currentAngle < 0) currentAngle += 360;
+
+            const segmentAngle = 360 / groupLists.length;
+            let index = Math.floor(currentAngle / segmentAngle);
+            if (index >= groupLists.length) index = groupLists.length - 1;
+
+            selectedGroupIndex = index;
+
+            spinBtn.textContent = "👥 SPIN!";
+            spinBtn.disabled = true;
+            stopBtn.classList.remove("show");
+
+            if (selectedGroupIndex === null || selectedGroupIndex >= groupLists.length) {
+                selectedPerson = null;
+                personSelectedWaitingForGroup = false;
+                document.getElementById("nameSpinBtn").disabled = groupPeople.length === 0;
+                return;
+            }
+
+            const group = groupLists[selectedGroupIndex];
+            if (!group || !selectedPerson) {
+                selectedPerson = null;
+                personSelectedWaitingForGroup = false;
+                document.getElementById("nameSpinBtn").disabled = groupPeople.length === 0;
+                return;
+            }
+
+            const assignment = {
+                name: selectedPerson,
+                group: group,
+                date: new Date().toLocaleString()
+            };
+
+            groupResults.push(assignment);
+            localStorage.setItem("groupResults", JSON.stringify(groupResults));
+
+            updateResult("👥 " + group + " — 👤 " + selectedPerson, "🎉 Person assigned to group!");
+            renderHistory();
+            showCongratulations("👥 " + group + " — 👤 " + selectedPerson);
+            celebrate();
+
+            selectedPerson = null;
+            selectedPersonIndex = null;
+            selectedGroupIndex = null;
+            personSelectedWaitingForGroup = false;
+
+            document.getElementById("nameSpinBtn").disabled = groupPeople.length === 0;
+
+            setTimeout(function () {
+                if (currentMode === "group") {
+                    updateResult(
+                        "Ready for Next!",
+                        groupPeople.length
+                            ? "👤 Click SPIN on Name Wheel to select the next person!"
+                            : "🎉 All people have been grouped!"
+                    );
+                }
+            }, 3500);
+        }
+
+        function updateResult(main, message) {
+            const card = document.getElementById("resultCard");
+            document.getElementById("resultMain").innerHTML = main;
+            document.getElementById("resultMessage").innerHTML = message;
+            card.classList.remove("pop");
+            void card.offsetWidth;
+            card.classList.add("pop");
+        }
+
+        function showCongratulations(result) {
+            document.getElementById("congratsResult").innerHTML = result;
+            document.getElementById("congratsModal").classList.add("show");
+        }
+
+        function renderHistory() {
+            const list = document.getElementById("historyList");
+            if (!groupResults.length) {
+                list.innerHTML = '<div class="empty">No group assignments yet. 🎈</div>';
+                return;
+            }
+            list.innerHTML = [...groupResults].reverse().map(function (r) {
+                return `
+                    <div class="history-item">
+                        <div>👤 <strong>${escapeHtml(r.name)}</strong></div>
+                        <div class="history-group">👥 ${escapeHtml(r.group)}</div>
+                        <small>${escapeHtml(r.date)}</small>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function exportResults() {
+            if (!groupResults.length) {
+                showToast("⚠️ No results to export!");
+                return;
+            }
+            let csv = "Name,Group,Date\n";
+            groupResults.forEach(function (r) {
+                const name = String(r.name).replace(/"/g, '""');
+                const group = String(r.group).replace(/"/g, '""');
+                const date = String(r.date).replace(/"/g, '""');
+                csv += `"${name}","${group}","${date}"\n`;
+            });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = "group_results_" + new Date().toISOString().slice(0, 10) + ".csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast("📤 Results exported as CSV!");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerHTML = message;
+            toast.classList.add("show");
+            setTimeout(function () {
+                toast.classList.remove("show");
+            }, 2500);
+        }
+
+        function celebrate() {
+            const emojis = ["🎉", "🎊", "⭐", "✨", "🌈", "🎈", "🥳", "🎁"];
+            for (let i = 0; i < 50; i++) {
+                const piece = document.createElement("div");
+                piece.className = "confetti";
+                piece.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                piece.style.left = Math.random() * 100 + "vw";
+                piece.style.fontSize = 15 + Math.random() * 25 + "px";
+                piece.style.animationDuration = 1.5 + Math.random() * 2 + "s";
+                document.body.appendChild(piece);
+                setTimeout(function () { piece.remove(); }, 4000);
+            }
+        }
+
+        function celebrateSmall() {
+            const emojis = ["⭐", "✨", "🎈", "😊"];
+            for (let i = 0; i < 18; i++) {
+                const piece = document.createElement("div");
+                piece.className = "confetti";
+                piece.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                piece.style.left = Math.random() * 100 + "vw";
+                piece.style.fontSize = "20px";
+                piece.style.animationDuration = "1.8s";
+                document.body.appendChild(piece);
+                setTimeout(function () { piece.remove(); }, 2500);
+            }
+        }
+
+        document.querySelectorAll(".modal").forEach(function (modal) {
+            modal.addEventListener("click", function (event) {
+                if (event.target === modal) {
+                    modal.classList.remove("show");
+                }
+            });
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeModals();
+                closeCongrats();
+            }
+        });
+
+        // Open edit modals with correct data
+        function openGroupEditModal() {
+            document.getElementById("groupEditModal").classList.add("show");
+            document.getElementById("groupEditInput").value = groupPeople.join('\n');
+            document.getElementById("groupEditInput").focus();
+        }
+
+        function openGroupListEditModal() {
+            document.getElementById("groupListEditModal").classList.add("show");
+            document.getElementById("groupListEditInput").value = groupLists.join('\n');
+            document.getElementById("groupListEditInput").focus();
+        }
+    </script>
+</body>
+
+</html>
