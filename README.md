@@ -135,4 +135,4 @@ This project is provided for personal and educational use. Feel free to use, mod
 
 ## 🙌 Enjoy!
 
-Have fun spinning and grouping! 🎉✨
+Have fun spinning and grouping!!🎉✨
