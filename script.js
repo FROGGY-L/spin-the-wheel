@@ -576,10 +576,12 @@ function startWheelNameSpin() {
     dom.nameStopBtn.classList.add("show");
     playSpinSound();
 
+    // Disable transition once before the loop for smooth mobile spinning
+    dom.nameCanvas.style.transition = "none";
+
     function spinWheel() {
         if (!nameSpinning) return;
         nameRotation += 2;
-        dom.nameCanvas.style.transition = "none";
         dom.nameCanvas.style.transform = `rotate(${nameRotation}deg)`;
         requestAnimationFrame(spinWheel);
     }
@@ -666,10 +668,12 @@ function startPersonSpin() {
     dom.nameStopBtn.classList.add("show");
     playSpinSound();
 
+    // Disable transition once before the loop for smooth mobile spinning
+    dom.nameCanvas.style.transition = "none";
+
     function spinWheel() {
         if (!nameSpinning) return;
         nameRotation += 2;
-        dom.nameCanvas.style.transition = "none";
         dom.nameCanvas.style.transform = `rotate(${nameRotation}deg)`;
         requestAnimationFrame(spinWheel);
     }
@@ -724,10 +728,12 @@ function startGroupSpin() {
     dom.groupStopBtn.classList.add("show");
     playSpinSound();
 
+    // Disable transition once before the loop for smooth mobile spinning
+    dom.groupCanvas.style.transition = "none";
+
     function spinGroupWheel() {
         if (!groupSpinning) return;
         groupRotation += 2;
-        dom.groupCanvas.style.transition = "none";
         dom.groupCanvas.style.transform = `rotate(${groupRotation}deg)`;
         requestAnimationFrame(spinGroupWheel);
     }
