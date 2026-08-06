@@ -483,11 +483,12 @@ function renderAll() {
     renderHistory();
 }
 
-function drawWheel(canvas, items, type) {
+function drawWheel(canvas, items, type, rotationDeg = 0) {
     const ctx = canvas.getContext("2d");
     const size = canvas.width;
     const center = size / 2;
     const radius = size / 2 - 10;
+    const rotation = rotationDeg * Math.PI / 180;
 
     ctx.clearRect(0, 0, size, size);
 
@@ -510,7 +511,7 @@ function drawWheel(canvas, items, type) {
     const slice = Math.PI * 2 / items.length;
 
     items.forEach((item, index) => {
-        const start = index * slice - Math.PI / 2;
+        const start = index * slice - Math.PI / 2 + rotation;
         const end = start + slice;
 
         ctx.beginPath();
@@ -576,13 +577,13 @@ function startWheelNameSpin() {
     dom.nameStopBtn.classList.add("show");
     playSpinSound();
 
-    // Disable transition once before the loop for smooth mobile spinning
-    dom.nameCanvas.style.transition = "none";
+    // Reset any CSS transform so we draw the rotation inside the canvas instead
+    dom.nameCanvas.style.transform = "none";
 
     function spinWheel() {
         if (!nameSpinning) return;
         nameRotation += 2;
-        dom.nameCanvas.style.transform = `rotate(${nameRotation}deg)`;
+        drawWheel(dom.nameCanvas, wheelNames, "wheel", nameRotation);
         requestAnimationFrame(spinWheel);
     }
 
@@ -597,13 +598,8 @@ function stopNameSpin() {
 
     const items = currentMode === "wheel" ? wheelNames : groupPeople;
 
-    const style = window.getComputedStyle(dom.nameCanvas);
-    const matrix = new DOMMatrix(style.transform);
-    let currentAngle = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
-    if (currentAngle < 0) currentAngle += 360;
-
     const segmentAngle = 360 / items.length;
-    let index = Math.floor(currentAngle / segmentAngle);
+    let index = Math.floor((nameRotation % 360) / segmentAngle);
     if (index >= items.length) index = items.length - 1;
 
     if (currentMode === "wheel") {
@@ -668,13 +664,13 @@ function startPersonSpin() {
     dom.nameStopBtn.classList.add("show");
     playSpinSound();
 
-    // Disable transition once before the loop for smooth mobile spinning
-    dom.nameCanvas.style.transition = "none";
+    // Reset any CSS transform so we draw the rotation inside the canvas instead
+    dom.nameCanvas.style.transform = "none";
 
     function spinWheel() {
         if (!nameSpinning) return;
         nameRotation += 2;
-        dom.nameCanvas.style.transform = `rotate(${nameRotation}deg)`;
+        drawWheel(dom.nameCanvas, groupPeople, "wheel", nameRotation);
         requestAnimationFrame(spinWheel);
     }
 
@@ -728,13 +724,13 @@ function startGroupSpin() {
     dom.groupStopBtn.classList.add("show");
     playSpinSound();
 
-    // Disable transition once before the loop for smooth mobile spinning
-    dom.groupCanvas.style.transition = "none";
+    // Reset any CSS transform so we draw the rotation inside the canvas instead
+    dom.groupCanvas.style.transform = "none";
 
     function spinGroupWheel() {
         if (!groupSpinning) return;
         groupRotation += 2;
-        dom.groupCanvas.style.transform = `rotate(${groupRotation}deg)`;
+        drawWheel(dom.groupCanvas, groupLists, "group", groupRotation);
         requestAnimationFrame(spinGroupWheel);
     }
 
@@ -747,13 +743,8 @@ function stopGroupSpin() {
     groupSpinning = false;
     stopSpinSound();
 
-    const style = window.getComputedStyle(dom.groupCanvas);
-    const matrix = new DOMMatrix(style.transform);
-    let currentAngle = Math.atan2(matrix.b, matrix.a) * (180 / Math.PI);
-    if (currentAngle < 0) currentAngle += 360;
-
     const segmentAngle = 360 / groupLists.length;
-    let index = Math.floor(currentAngle / segmentAngle);
+    let index = Math.floor((groupRotation % 360) / segmentAngle);
     if (index >= groupLists.length) index = groupLists.length - 1;
 
     selectedGroupIndex = index;
