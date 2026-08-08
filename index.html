@@ -40,7 +40,8 @@
                 <h2>🎯 Wheel Mode</h2>
                 <div class="count">Just spin to pick a random name!</div>
                 <div class="manage-actions">
-                    <button class="btn" id="howToUseWheelBtn" style="background: #ede9fe; color: #7c3aed;">ℹ️ How to use</button>
+                    <button class="btn" id="howToUseWheelBtn" style="background: #ede9fe; color: #7c3aed;">ℹ️ How to
+                        use</button>
                 </div>
             </div>
         </section>
@@ -109,11 +110,11 @@
             <div class="history-header">
                 <h2>📋 Grouping Results</h2>
                 <div class="history-actions">
-                    <button class="btn btn-export" id="exportCsvBtn">📤 Export CSV</button>
+                    <button class="btn btn-export" id="exportCsvBtn">📤 Export Result to Excel</button>
                     <button class="btn btn-clear" id="clearHistoryBtn">🗑️ Clear Results</button>
                 </div>
             </div>
-<div id="historyList" class="history-list">
+            <div id="historyList" class="history-list">
                 <div class="empty">No group assignments yet. 🎈</div>
             </div>
         </section>
@@ -216,6 +217,7 @@
     <div class="toast" id="toast"></div>
     <audio id="spinSound" src="mingle-sound.mp3" preload="auto"></audio>
 
+    <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
     <script src="script.js" defer></script>
 </body>
 
